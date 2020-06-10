@@ -9,9 +9,11 @@ import com.gemini.ocs.model.BaseObservingProgram;
 import com.gemini.ocs.model.BaseSciencePlan;
 import com.gemini.ocs.model.DataProcRequirement;
 import jparsec.ephem.Target;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 @Entity
+@DynamicUpdate
 public class SciencePlan {
     @Id
     private int planNo;
@@ -54,7 +56,22 @@ public class SciencePlan {
     }
     public SciencePlan(){}
 
+//    When humanValidation and checking with OCS are True
     public void setValidated(Boolean validated) {
         this.validated = validated;
+    }
+
+//    To check enum
+    public String getTelescopeLocation() {
+        return telescopeLocation;
+    }
+    
+//    To check enum
+    public String getStatus() {
+        return status;
+    }
+//    To check enum
+    public String getStarSystem() {
+        return starSystem;
     }
 }

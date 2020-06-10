@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface SciplanRepository extends
         CrudRepository<SciencePlan, Integer> {
-    SciencePlan findByCreator(String creator);
+    SciencePlan findByPlanNo(int planNo);
 }

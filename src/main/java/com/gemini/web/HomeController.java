@@ -5,10 +5,10 @@ import com.gemini.model.SciencePlan;
 import com.gemini.repository.EmployeeRepository;
 import com.gemini.repository.SciplanRepository;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jparsec.ephem.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import io.jsonwebtoken.Jwts;
 import org.json.*;
@@ -16,7 +16,9 @@ import org.json.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class HomeController {
@@ -97,5 +99,29 @@ public class HomeController {
     public @ResponseBody
     Iterable<SciencePlan> getSciplan(){
         return sciplanRepository.findAll();
+    }
+
+    @CrossOrigin
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateSciplan(int PlanNo,boolean humanValidation){
+        SciencePlan sciencePlan = sciplanRepository.findByPlanNo(PlanNo);
+//        Check starSystem Enum from Target jparsec.ephem
+        String[] AvailableNames = Target.getNames();
+        List<String> availableNames = Arrays.asList(AvailableNames);
+        availableNames.replaceAll(String::toLowerCase);
+        String starSystem = sciencePlan.getStarSystem();
+        if(!availableNames.contains(starSystem)){
+            return new ResponseEntity<>(starSystem+"is an invalid starSystem",HttpStatus.OK);
+        }
+        //TODO:TELESCOPELOC Enum checking
+        //TODO:DataProcRequirements fileType and COLOR_TYPE Enum checking
+        //TODO:observingProgram : Try create observingProgram objects by the input received
+        //TODO:STATUS Enum checking
+        if(humanValidation){
+            sciencePlan.setValidated(true);
+            sciplanRepository.save(sciencePlan);
+            return new ResponseEntity<>("Valid!",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Invalid.. Reason Unknown",HttpStatus.OK);
     }
 }
