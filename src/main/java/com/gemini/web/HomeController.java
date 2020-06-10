@@ -30,14 +30,14 @@ public class HomeController {
     public ResponseEntity<String> login(@RequestParam String username,
                                         @RequestParam String password){
 //        test user
-        Employee user = new Employee('0', "naipawat", "poolsawat", "Naipawat", "Poolsawat", "naipawat.poo@student.mahidol.ac.th");
+        Employee user = new Employee('0', "poolsawat","Naipawat","Poolsawat","naipawat");
         employeeRepository.save(user);
-        if(employeeRepository.findByUsername(username) != null)
+        if(employeeRepository.findByEmail(username) != null)
         {
-            Employee employee = employeeRepository.findByUsername(username);
-                if (employee.getUsername()==username && employee.getPassword()==password)
+            Employee employee = employeeRepository.findByEmail(username);
+                if (employee.getEmail()==username && employee.getPassword()==password)
                 {
-                    return new ResponseEntity<>(Jwts.builder().setSubject(employee.getUsername()).claim("roles", "user").setIssuedAt(new Date())
+                    return new ResponseEntity<>(Jwts.builder().setSubject(employee.getEmail()).claim("roles", "user").setIssuedAt(new Date())
                             .signWith(SignatureAlgorithm.HS256, "secretkey").compact(), HttpStatus.OK);
                 }
         }

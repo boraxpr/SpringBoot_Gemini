@@ -11,7 +11,6 @@ import java.util.List;
 public class Employee {
     @Id
     private Integer id;
-    private String username;
     private String password;
     private String firstname;
     private String lastname;
@@ -20,15 +19,15 @@ public class Employee {
     @OneToMany(mappedBy = "planNo",cascade = CascadeType.ALL)
     private List<SciencePlan> sciencePlans;
 
-    public Employee(int id, String username, String password, String firstname
+    public Employee(int id, String password, String firstname
             , String lastname, String email){
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.email = email;
     }
+    public Employee(){}
 
     public List<SciencePlan> getSciencePlans(){
         return sciencePlans;
@@ -38,7 +37,7 @@ public class Employee {
         return password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 }
