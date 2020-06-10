@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.model;
+package com.gemini.ocs.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

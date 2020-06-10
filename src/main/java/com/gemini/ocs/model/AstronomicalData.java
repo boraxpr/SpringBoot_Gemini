@@ -3,12 +3,15 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.model;
+package com.gemini.ocs.model;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;

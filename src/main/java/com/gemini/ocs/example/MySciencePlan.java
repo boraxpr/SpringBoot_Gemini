@@ -3,9 +3,9 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.example;
+package com.gemini.ocs.example;
 
-import edu.gemini.app.ocs.model.BaseSciencePlan;
+import com.gemini.ocs.model.BaseSciencePlan;
 
 public class MySciencePlan extends BaseSciencePlan {
     private String description;

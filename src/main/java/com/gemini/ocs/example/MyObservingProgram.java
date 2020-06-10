@@ -3,9 +3,9 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.example;
+package com.gemini.ocs.example;
 
-import edu.gemini.app.ocs.model.BaseObservingProgram;
+import com.gemini.ocs.model.BaseObservingProgram;
 
 public class MyObservingProgram extends BaseObservingProgram {
     private String notes;

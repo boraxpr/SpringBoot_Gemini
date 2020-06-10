@@ -1,8 +1,10 @@
 package com.gemini.repository;
 
+import com.gemini.model.Employee;
 import com.gemini.model.SciencePlan;
 import org.springframework.data.repository.CrudRepository;
 
-public interface SciencePlanRepository extends
-        CrudRepository<SciencePlan, Integer> {
+public interface EmployeeRepository extends
+        CrudRepository<Employee, Integer> {
+    Employee findByUsername(String username);
 }

@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.model;
+package com.gemini.ocs.model;
 
 public class Lens {
     private String make;

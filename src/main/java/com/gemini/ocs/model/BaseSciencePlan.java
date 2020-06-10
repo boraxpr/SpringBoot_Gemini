@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.model;
+package com.gemini.ocs.model;
 
 import jparsec.ephem.Target;
 
@@ -23,8 +23,8 @@ public class BaseSciencePlan {
     private Date startDate;
     private Date endDate;
     private TELESCOPELOC telescopeLocation;
-    private ArrayList<edu.gemini.app.ocs.model.DataProcRequirement> dataProcRequirements;
-    private edu.gemini.app.ocs.model.BaseObservingProgram observingProgram;
+    private ArrayList<DataProcRequirement> dataProcRequirements;
+    private BaseObservingProgram observingProgram;
     private STATUS status;
 
     public enum TELESCOPELOC {

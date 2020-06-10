@@ -3,9 +3,9 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.controller;
+package com.gemini.ocs.controller;
 
-import edu.gemini.app.ocs.model.VirtualTelescope;
+import com.gemini.ocs.model.VirtualTelescope;
 
 public class VirtualTelescopeHandler {
     private static VirtualTelescope vt1;

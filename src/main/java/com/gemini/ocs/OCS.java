@@ -3,9 +3,9 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs;
+package com.gemini.ocs;
 
-import edu.gemini.app.ocs.model.*;
+import com.gemini.ocs.model.*;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;

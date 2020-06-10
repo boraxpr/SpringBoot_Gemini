@@ -3,13 +3,12 @@
  * All rights reserved.
  */
 
-package edu.gemini.app.ocs.example;
+package com.gemini.ocs.example;
 
-import edu.gemini.app.ocs.OCS;
-import edu.gemini.app.ocs.controller.VirtualTelescopeHandler;
-import edu.gemini.app.ocs.example.MyObservingProgram;
-import edu.gemini.app.ocs.example.MySciencePlan;
-import edu.gemini.app.ocs.model.*;
+import com.gemini.ocs.OCS;
+import com.gemini.ocs.controller.VirtualTelescopeHandler;
+import com.gemini.ocs.model.*;
+//import edu.gemini.app.ocs.model.*;
 import jparsec.ephem.Target;
 
 import javax.swing.*;
