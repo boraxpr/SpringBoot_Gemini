@@ -1,9 +1,9 @@
 package com.gemini.web;
 
 import com.gemini.model.Employee;
-import com.gemini.ocs.model.BaseSciencePlan;
+import com.gemini.model.SciencePlan;
 import com.gemini.repository.EmployeeRepository;
-import io.jsonwebtoken.Jwt;
+import com.gemini.repository.SciplanRepository;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import io.jsonwebtoken.Jwts;
+import org.json.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-@Controller
+@RestController
 public class HomeController {
     @Autowired
     private EmployeeRepository employeeRepository;
-
+    @Autowired
+    private SciplanRepository sciplanRepository;
     @CrossOrigin
     @GetMapping("/")
     public @ResponseBody String root() {
@@ -28,20 +34,23 @@ public class HomeController {
     @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username,
-                                        @RequestParam String password){
+                                 @RequestParam String password){
 //        test user
-        Employee user = new Employee('0', "poolsawat","Naipawat","Poolsawat","naipawat");
+        Employee user = new Employee('0', "naipawat","password","Naipawat","Poolsawat");
         employeeRepository.save(user);
-        if(employeeRepository.findByEmail(username) != null)
+        if(employeeRepository.findByUsername(username) != null)
         {
-            Employee employee = employeeRepository.findByEmail(username);
-                if (employee.getEmail()==username && employee.getPassword()==password)
+            Employee employee = employeeRepository.findByUsername(username);
+                if (employee.getUsername().equals(username) && employee.getPassword().equals(password))
                 {
-                    return new ResponseEntity<>(Jwts.builder().setSubject(employee.getEmail()).claim("roles", "user").setIssuedAt(new Date())
-                            .signWith(SignatureAlgorithm.HS256, "secretkey").compact(), HttpStatus.OK);
+                    JSONObject jsonString =  new JSONObject();
+                    jsonString.put("token",Jwts.builder().setSubject(employee.getUsername()).claim("roles", "user").setIssuedAt(new Date())
+                            .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+
+                    return new ResponseEntity<>(jsonString.toString(), HttpStatus.OK);
                 }
         }
-        return new ResponseEntity<>("No user or wrong password",HttpStatus.OK);
+        return new ResponseEntity<>("User not found",HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -52,30 +61,41 @@ public class HomeController {
                                              @RequestParam double fundingInUSD,
                                              @RequestParam String objectives,
                                              @RequestParam String starSystem,
-                                             @RequestParam Date startDate,
-                                             @RequestParam Date endDate,
+                                             @RequestParam String startDate,
+                                             @RequestParam String endDate,
                                              @RequestParam String TELESCOPELOC,
-//                                        to create ocs.model.dataProcRequirements
-                                             @RequestParam String fileType,
-                                             @RequestParam double fileQuality,
-                                             @RequestParam String COLORTYPE,
-                                             @RequestParam double contrast,
-                                             @RequestParam double brightness,
-                                             @RequestParam double saturation,
-//                                        to create ocs.model.BaseObservingProgram
-                                             @RequestParam int observingProgramId,
-//                                          to create ocs.model.LocationElement
-                                             @RequestParam String body,
-                                             @RequestParam boolean apparentOfDate,
-//                                          to create ocs.model.Lens
-                                             @RequestParam String LensMake,
-                                             @RequestParam String LensModel,
-                                             @RequestParam String LensManufacturer,
-                                             @RequestParam int LensYear,
-//                                        to create BaseObservingProgram not finished
-//                                             @RequestParam
-//                                        to create BaseSciencePlan attribute
-                                        @RequestParam BaseSciencePlan.STATUS status){
+                                             //TELESCOPELOC = {String TELESCOPELOC :HAWAII or CHILE}
+                                             @RequestParam ArrayList<String> dataProcRequirements,
+                                             //dataProcRequirement =
+                                             //{string 'fileType':'RAW'or'PNG'or'JPEG'or'TIFF'
+                                             //,double 'fileQuality'
+                                             //,string 'COLOR_TYPE':'BW'or'COLOR'
+                                             //,double 'contrast'
+                                             //,double 'brightness'
+                                             //,double 'saturation'}
+                                             @RequestParam ArrayList<String> observingProgram,
+                                             //observingProgram =
+                                             //{int 'id'
+                                             //LocationElement : {double longitude,double latitude,double radius}
+                                             //Lens : {String make,String model, String manufacturer, int year}
+                                             //ArrayList<Filter> for each Filter {String make,String model,String manufacturer,int year,double size,double weight}}
+                                             //ArrayList<Double>
+                                             //boolean isLightDetectorOn
+                                             //ArrayList<SpecialEquipment> for each SpecialEquipment {String equipmentName,String ownerName,Date installedDate}
+                                             //AstronomicalData : List of images
+                                             @RequestParam String status
+                                             //status = {String 'status': COMPLETE or RUNNING or SUMMITTED}
+                                        ) throws ParseException {
+        Date StartDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
+        Date EndDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
+        sciplanRepository.save(new SciencePlan(planNo,creator,submiter,fundingInUSD,objectives,starSystem,StartDate,EndDate,TELESCOPELOC,dataProcRequirements,observingProgram,status));
         return new ResponseEntity<>("SciPlan Added",HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/getsciplan")
+    public @ResponseBody
+    Iterable<SciencePlan> getSciplan(){
+        return sciplanRepository.findAll();
     }
 }
