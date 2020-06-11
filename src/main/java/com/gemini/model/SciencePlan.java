@@ -17,8 +17,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class SciencePlan {
     private static AtomicInteger count = new AtomicInteger(0);
-    @Id
-    private int planNo;
     private String creator;
     private String submitter;
     private double fundingInUSD;
@@ -35,6 +33,8 @@ public class SciencePlan {
     @ElementCollection
     @CollectionTable
     private List<String> observingProgram;
+    @Id
+    private int planNo;
 
     public SciencePlan(String creator
             , String submitter, double fundingInUSD

@@ -11,12 +11,13 @@ import java.util.List;
 @SuppressWarnings("ALL")
 @Entity
 public class Employee {
-    @Id
-    private Integer id;
     private String username;
     private String password;
     private String firstname;
     private String lastname;
+    @Id
+    private Integer id;
+
 
 //    @OneToMany(mappedBy = "planNo",cascade = CascadeType.ALL)
 //    private List<SciencePlan> sciencePlans;

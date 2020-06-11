@@ -31,7 +31,7 @@ public class HomeController {
 
 
     @CrossOrigin
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<String> login(@RequestParam String username,
                                  @RequestParam String password){
 //        test user
@@ -52,7 +52,7 @@ public class HomeController {
     }
 
     @CrossOrigin
-    @PostMapping("/addsciplan")
+    @PostMapping("/api/addsciplan")
     public ResponseEntity<String> addSciplan(@RequestParam int planNo,
                                              @RequestParam String creator,
                                              @RequestParam String submiter,
@@ -99,14 +99,14 @@ public class HomeController {
     }
 
     @CrossOrigin
-    @GetMapping("/getsciplan")
+    @GetMapping("/api/getsciplan")
     public @ResponseBody
     Iterable<SciencePlan> getSciplan(){
         return sciplanRepository.findAll();
     }
 
     @CrossOrigin
-    @PostMapping("/validate")
+    @PostMapping("/api/validate")
     public ResponseEntity<String> validateSciplan(int PlanNo,boolean humanValidation){
         SciencePlan sciencePlan = sciplanRepository.findByPlanNo(PlanNo);
 //        Check starSystem Enum from Target jparsec.ephem
@@ -130,7 +130,7 @@ public class HomeController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/api/delete/{id}")
     public ResponseEntity<String> removeSciPlanById(@PathVariable("id") int id) {
         // delete a specific hero
         sciplanRepository.deleteById(id);
