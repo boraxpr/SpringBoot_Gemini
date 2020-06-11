@@ -33,7 +33,7 @@ public class HomeController {
     }
 
     @PostMapping(path = "/api/login",consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Object> login(@RequestBody LoginForm loginForm){
+    public ResponseEntity<String> login(@RequestBody LoginForm loginForm){
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 //        test user
@@ -47,7 +47,7 @@ public class HomeController {
                     JSONObject jsonString =  new JSONObject();
                     jsonString.put("token",Jwts.builder().setSubject(employee.getUsername()).claim("roles", "user").setIssuedAt(new Date())
                             .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-                    return new ResponseEntity<>(jsonString, HttpStatus.OK);
+                    return new ResponseEntity<>(jsonString.toString(),HttpStatus.OK);
                 }
         }
         return new ResponseEntity<>("User not found",HttpStatus.OK);

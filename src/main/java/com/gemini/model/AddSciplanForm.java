@@ -2,8 +2,10 @@ package com.gemini.model;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 
+@XmlRootElement
 public class AddSciplanForm {
     String creator;
     String submiter;
