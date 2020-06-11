@@ -128,4 +128,12 @@ public class HomeController {
         }
         return new ResponseEntity<>("Invalid.. Reason Unknown",HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> removeSciPlanById(@PathVariable("id") int id) {
+        // delete a specific hero
+        sciplanRepository.deleteById(id);
+        return new ResponseEntity<>("Sciplan: "+id+"is deleted",HttpStatus.OK);
+    }
 }
