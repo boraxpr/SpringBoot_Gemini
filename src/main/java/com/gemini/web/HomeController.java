@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin
 @RestController
 public class HomeController {
     @Autowired
@@ -32,7 +33,7 @@ public class HomeController {
 
     @CrossOrigin
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestParam String username,
+    public ResponseEntity<Object> login(@RequestParam String username,
                                  @RequestParam String password){
 //        test user
         Employee user = new Employee('0', "naipawat","password","Naipawat","Poolsawat");
@@ -45,7 +46,7 @@ public class HomeController {
                     JSONObject jsonString =  new JSONObject();
                     jsonString.put("token",Jwts.builder().setSubject(employee.getUsername()).claim("roles", "user").setIssuedAt(new Date())
                             .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-                    return new ResponseEntity<>(jsonString.toString(), HttpStatus.OK);
+                    return new ResponseEntity<>(jsonString, HttpStatus.OK);
                 }
         }
         return new ResponseEntity<>("User not found",HttpStatus.OK);
