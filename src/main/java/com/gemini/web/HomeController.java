@@ -54,10 +54,13 @@ public class HomeController {
     }
 
     @PostMapping(path="/api/testtoken",consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> tokentest(@RequestHeader(name = "token") String headerPersist){
-        JSONObject tokenJSON = new JSONObject(headerPersist);
-        String token = tokenJSON.get("token").toString();
-        return new ResponseEntity<>(token, HttpStatus.OK);
+    public void tokentest(@RequestHeader(name = "token") String headerPersist){
+        String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace(".",""))
+                .getBody()
+                .getSubject();
+        System.out.println(username);
     }
 
     @PostMapping(path="/api/addsciplan",consumes = "application/json", produces = "application/json")
@@ -74,14 +77,13 @@ public class HomeController {
         ArrayList<String> dataProcRequirements = addSciplanForm.getDataProcRequirements();
         ArrayList<String> observingProgram = addSciplanForm.getObservingProgram();
         String status = addSciplanForm.getStatus();
-        // Get token from header
-        JSONObject tokenJSON = new JSONObject(headerPersist);
-        String token = tokenJSON.get("token").toString();
-        //        Token checking
-        String[] parts = token.split("\\.");
-        String decoded1 = new String(Base64.getUrlDecoder().decode(parts[1]));
-        JSONObject test = new JSONObject(decoded1);
-        if(!test.get("sub").toString().toLowerCase().equals(creator)){
+                //        Token checking
+        String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist)
+                .getBody()
+                .getSubject();
+        if(!username.equals(creator)){
             return new ResponseEntity<>("Please type your username as creator", HttpStatus.OK);
         }
 //        Date formatting
