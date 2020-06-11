@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gemini.ocs.model.BaseObservingProgram;
 import com.gemini.ocs.model.BaseSciencePlan;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @DynamicUpdate
 public class SciencePlan {
+    private static AtomicInteger count = new AtomicInteger(0);
     @Id
     private int planNo;
     private String creator;
@@ -34,13 +36,12 @@ public class SciencePlan {
     @CollectionTable
     private List<String> observingProgram;
 
-    public SciencePlan(int planNo, String creator
+    public SciencePlan(String creator
             , String submitter, double fundingInUSD
             , String objectives, String starSystem
             , Date startDate, Date endDate
             , String telescopeLocation, ArrayList<String> dataProcRequirements
             , ArrayList<String> observingProgram, String status){
-        this.planNo = planNo;
         this.creator = creator;
         this.submitter = submitter;
         this.fundingInUSD = fundingInUSD;
@@ -53,10 +54,11 @@ public class SciencePlan {
         this.observingProgram = observingProgram;
         this.status = status;
         this.validated = Boolean.FALSE;
+        this.planNo = count.incrementAndGet();
     }
     public SciencePlan(){}
 
-//    When humanValidation and checking with OCS are True
+    //    When humanValidation and checking with OCS are True
     public void setValidated(Boolean validated) {
         this.validated = validated;
     }

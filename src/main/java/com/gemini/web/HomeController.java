@@ -15,10 +15,7 @@ import org.json.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class HomeController {
@@ -48,7 +45,6 @@ public class HomeController {
                     JSONObject jsonString =  new JSONObject();
                     jsonString.put("token",Jwts.builder().setSubject(employee.getUsername()).claim("roles", "user").setIssuedAt(new Date())
                             .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-
                     return new ResponseEntity<>(jsonString.toString(), HttpStatus.OK);
                 }
         }
@@ -84,13 +80,21 @@ public class HomeController {
                                              //ArrayList<Double>
                                              //boolean isLightDetectorOn
                                              //ArrayList<SpecialEquipment> for each SpecialEquipment {String equipmentName,String ownerName,Date installedDate}
-                                             //AstronomicalData : List of images
-                                             @RequestParam String status
+                                             @RequestParam String status,
                                              //status = {String 'status': COMPLETE or RUNNING or SUMMITTED}
-                                        ) throws ParseException {
+
+                                            @RequestParam String token) throws ParseException {
+//        Token checking
+        String[] parts = token.split("\\.");
+        String decoded1 = new String(Base64.getUrlDecoder().decode(parts[1]));
+        JSONObject test = new JSONObject(decoded1);
+        if(!test.get("sub").toString().equals(creator)){
+            return new ResponseEntity<>("Please type your username as creator", HttpStatus.OK);
+        }
+//        Date formatting
         Date StartDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
         Date EndDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
-        sciplanRepository.save(new SciencePlan(planNo,creator,submiter,fundingInUSD,objectives,starSystem,StartDate,EndDate,TELESCOPELOC,dataProcRequirements,observingProgram,status));
+        sciplanRepository.save(new SciencePlan(creator,submiter,fundingInUSD,objectives,starSystem,StartDate,EndDate,TELESCOPELOC,dataProcRequirements,observingProgram,status));
         return new ResponseEntity<>("SciPlan Added",HttpStatus.OK);
     }
 
