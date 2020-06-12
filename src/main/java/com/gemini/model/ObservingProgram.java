@@ -23,6 +23,7 @@ public class ObservingProgram {
     private List<Double> exposures;
     @OneToOne(cascade = CascadeType.ALL)
     private lens lens;
+
     @Id
     private int id;
 

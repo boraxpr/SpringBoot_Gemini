@@ -35,7 +35,7 @@ public class HomeController {
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 //        test user
-        Employee user = new Employee('0', "naipawat","password","Naipawat","Poolsawat");
+        Employee user = new Employee("naipawat","password","Naipawat","Poolsawat");
         employeeRepository.save(user);
         if(employeeRepository.findByUsername(username) != null)
         {
@@ -87,8 +87,8 @@ public class HomeController {
         String creator = username;
 
 //        Date formatting
-        Date StartDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
-        Date EndDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
+        Date StartDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+        Date EndDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
         sciplanRepository.save(new SciencePlan(creator,fundingInUSD,objectives,starSystem,StartDate,EndDate,TELESCOPELOC,dataProcRequirements,observingProgram,status));
         return new ResponseEntity<>("SciPlan Added",HttpStatus.OK);
     }

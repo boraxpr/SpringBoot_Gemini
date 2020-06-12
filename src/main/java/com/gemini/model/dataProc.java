@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 public class dataProc extends DataProcRequirement {
-    private static AtomicInteger count = new AtomicInteger(0);
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     public dataProc(){
         super();
