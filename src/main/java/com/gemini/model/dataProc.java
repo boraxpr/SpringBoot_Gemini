@@ -13,4 +13,13 @@ public class dataProc extends DataProcRequirement {
     public dataProc(){
         super();
     }
+
+    public dataProc(String fileType, double fileQuality
+            , String COLOR_TYPE, double contrast
+            , double brightness, double saturation){
+        super(DataProcRequirement.TYPE.valueOf(fileType)
+                , fileQuality
+                , DataProcRequirement.COLOR_TYPE.valueOf(COLOR_TYPE)
+                , contrast, brightness, saturation);
+    }
 }

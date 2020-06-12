@@ -27,6 +27,22 @@ public class ObservingProgram {
     @Id
     private int id;
 
+    public ObservingProgram(){}
+
+    public ObservingProgram(LocationElement locationElement
+            , ArrayList<String> specialEquipments
+            , ArrayList<filter> filter
+            , ArrayList<Double> exposures
+            , lens lens, boolean isLightDetectorOn
+    ){
+        this.loc = new LocationElement();
+        this.filters = filter;
+        this.exposures = exposures;
+        this.lens = lens;
+        this.isLightDetectorOn = isLightDetectorOn;
+        this.specialEquipments = specialEquipments;
+    }
+
     public LocationElement getLoc() {
         return loc;
     }

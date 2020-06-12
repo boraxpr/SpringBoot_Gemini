@@ -101,12 +101,12 @@ public class HomeController {
     @GetMapping("/api/getsciplan")
     public @ResponseBody
     ArrayList<SciencePlan> getSciplan() throws ParseException {
-//        SciencePlan SciplanValidated = new SciencePlan("naipawat"
-//                ,new Double(200),"objectives101"
-//                ,"SUN",new SimpleDateFormat("dd/MM/yyyy").parse("20/10/2020")
-//                ,new SimpleDateFormat("dd/MM/yyyy").parse("30/10/2020"),"HAWAII"
-//                ,new ArrayList<>(Arrays.asList("","",""))
-//                ,new ArrayList<>(Arrays.asList("","","")),"COMPLETE");
+        SciencePlan SciplanValidated = new SciencePlan("naipawat"
+                ,new Double(200),"objectives101"
+                ,"SUN",new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10")
+                , new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20")
+                ,"HAWAII",new dataProc("PNG",100,"COLOR",0,0,0)
+                ,new ObservingProgram(),"COMPLETE");
 //        SciplanValidated.setValidated(true);
 //        SciencePlan SciplanNoValidated = new SciencePlan("naipawat"
 //        ,new Double(99999999),"WRONGOBJECTIVE"
@@ -122,9 +122,11 @@ public class HomeController {
 //        ,new ArrayList<>(Arrays.asList("","","")),"SUBMITTED");
 //        SciplanValidated.setValidated(true);
 //        SciplanValidated2.setValidated(true);
-//        sciplanRepository.save(SciplanValidated);
+        sciplanRepository.save(SciplanValidated);
 //        sciplanRepository.save(SciplanNoValidated);
 //        sciplanRepository.save(SciplanValidated2);
+        System.out.println(
+                SciplanValidated.getObservingProgram());
 
         return sciplanRepository.findByValidated(true);
     }
@@ -142,7 +144,7 @@ public class HomeController {
     }
 
     @PostMapping("/api/validate")
-    public ResponseEntity<String> validateSciplan(int PlanNo,boolean humanValidation){
+    public ResponseEntity<String> validateSciplan(int PlanNo){
         SciencePlan sciencePlan = sciplanRepository.findByPlanNo(PlanNo);
 //        Check starSystem Enum from Target jparsec.ephem
         String[] AvailableNames = Target.getNames();
@@ -156,12 +158,8 @@ public class HomeController {
         //TODO:DataProcRequirements fileType and COLOR_TYPE Enum checking
         //TODO:observingProgram : Try create observingProgram objects by the input received
         //TODO:STATUS Enum checking
-        if(humanValidation){
-            sciencePlan.setValidated(true);
-            sciplanRepository.save(sciencePlan);
-            return new ResponseEntity<>("Valid!",HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Invalid.. Reason Unknown",HttpStatus.OK);
+
+        return new ResponseEntity<>("Valid!",HttpStatus.OK);
     }
 
     @DeleteMapping("/api/delete/{id}")
