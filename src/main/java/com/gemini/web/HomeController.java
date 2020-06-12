@@ -96,7 +96,7 @@ public class HomeController {
         sciplanRepository.save(new SciencePlan(creator,fundingInUSD,objectives,starSystem,StartDate,EndDate,TELESCOPELOC,dataProcRequirements,observingProgram,status));
         return new ResponseEntity<>("SciPlan Added",HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Invalid header was passed, wrong token",HttpStatus.OK);
+            return new ResponseEntity<>("Invalid header was passed, wrong token",HttpStatus.BAD_REQUEST);
         }
     }
 //(String creator
@@ -110,6 +110,34 @@ public class HomeController {
     ArrayList<SciencePlan> getSciplan(
 //            @RequestHeader(name = "token") String headerPersist
     ) throws ParseException {
+        filter filter = new filter("testsetse","mamamama","222A",2000,200,200);
+        ArrayList<filter> filters = new ArrayList<>();
+        filters.add(filter);
+        ArrayList<Double> exposures = new ArrayList<>();
+        exposures.add((double) 2);
+        exposures.add((double) 3);
+        locationElement loc = new locationElement();
+        loc.setLatitude(Double.parseDouble("133"));
+        loc.setRadius(Double.parseDouble("10"));
+        loc.setLongitude(Double.parseDouble("60"));
+        System.out.println(loc.getLatitude());
+
+        specialEquipment sp = new specialEquipment("eqNametest","ownerNametest","installedDatetest");
+        ArrayList<specialEquipment> sps = new ArrayList<>();
+        sps.add(sp);
+
+        SciencePlan SciplanValidated = new SciencePlan("naipawat"
+                ,new Double(200),"objectives101"
+                ,"SUN",new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10")
+                , new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20")
+                ,"HAWAII",new dataProc("PNG",100,"COLOR",-10,60,90)
+                ,new ObservingProgram(loc,sps
+                                        ,filters,exposures
+                                        ,new lens("maketest","modeltest","manutest",1998)
+                                        ,true)
+                ,"COMPLETE");
+        SciplanValidated.setValidated(true);
+        sciplanRepository.save(SciplanValidated);
 //        try{
 //            String username = Jwts.parser()
 //                .setSigningKey("secretkey")
