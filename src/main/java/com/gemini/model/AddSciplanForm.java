@@ -1,5 +1,7 @@
 package com.gemini.model;
 
+import com.gemini.ocs.model.BaseObservingProgram;
+import com.gemini.ocs.model.DataProcRequirement;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,29 +10,27 @@ import java.util.Date;
 
 @XmlRootElement
 public class AddSciplanForm {
+
     Boolean validated;
-    String creator;
-    String submitter;
     double fundingInUSD;
+    String creator;
     String objectives;
     String starSystem;
     String startDate;
     String endDate;
     String TELESCOPELOC;
-    ArrayList<String> dataProcRequirements;
-    ArrayList<String> observingProgram;
+    dataProc dataProcRequirements;
+    ObservingProgram observingProgram;
     String status;
     
     public AddSciplanForm(){}
     
-    public AddSciplanForm(String creator
-            , String submitter, double fundingInUSD
+    public AddSciplanForm(String creator, double fundingInUSD
             , String objectives, String starSystem
             , String startDate, String endDate
-            , String telescopeLocation, ArrayList<String> dataProcRequirements
-            , ArrayList<String> observingProgram, String status){
-                this.creator = creator;
-        this.submitter = submitter;
+            , String telescopeLocation, dataProc dataProcRequirements
+            , ObservingProgram observingProgram, String status){
+        this.creator = creator;
         this.fundingInUSD = fundingInUSD;
         this.objectives = objectives;
         this.starSystem = starSystem;
@@ -41,14 +41,6 @@ public class AddSciplanForm {
         this.observingProgram = observingProgram;
         this.status = status;
         this.validated = Boolean.FALSE;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public String getSubmiter() {
-        return submitter;
     }
 
     public double getFundingInUSD() {
@@ -75,11 +67,11 @@ public class AddSciplanForm {
         return TELESCOPELOC;
     }
 
-    public ArrayList<String> getDataProcRequirements() {
+    public dataProc getDataProcRequirements() {
         return dataProcRequirements;
     }
 
-    public ArrayList<String> getObservingProgram() {
+    public ObservingProgram getObservingProgram() {
         return observingProgram;
     }
 
