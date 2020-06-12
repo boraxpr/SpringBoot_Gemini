@@ -25,7 +25,7 @@ public class HomeController {
     @Autowired
     private SciplanRepository sciplanRepository;
     @Autowired
-    private ObservableSciplanRepository observableSciplanRepository;
+    private ObservableSciplanRepository observableRepository;
 
     @GetMapping("/")
     public @ResponseBody String root() {
@@ -191,15 +191,16 @@ public class HomeController {
         String[] AvailableNames = Target.getNames();
         List<String> availableNames = Arrays.asList(AvailableNames);
         availableNames.replaceAll(String::toLowerCase);
-        String starSystem = sciencePlan.getStarSystem();
+        String starSystem = sciencePlan.getStarSystem().toLowerCase();
         if(!availableNames.contains(starSystem)){
-            return new ResponseEntity<>(starSystem+"is an invalid starSystem",HttpStatus.OK);
+            return new ResponseEntity<>(starSystem+"is an invalid starSystem",HttpStatus.BAD_REQUEST);
         }
         //TODO:TELESCOPELOC Enum checking
         //TODO:DataProcRequirements fileType and COLOR_TYPE Enum checking
         //TODO:observingProgram : Try create observingProgram objects by the input received
         //TODO:STATUS Enum checking
-
+        sciencePlan.setValidated(true);
+        sciplanRepository.save(sciencePlan);
         return new ResponseEntity<>("Valid!",HttpStatus.OK);
     }
 
@@ -232,8 +233,11 @@ public class HomeController {
         }
         int planno = planNo.getPlanNo();
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
-        observableSciplanRepository.save(sciplan);
+        observableRepository.save(sciplan);
         sciplanRepository.delete(sciplan);
         return new ResponseEntity<>("Sciplan: "+planno+"is submitted",HttpStatus.OK);
     }
+
+
+
 }
