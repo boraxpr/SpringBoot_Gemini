@@ -26,9 +26,9 @@ public class SciencePlan {
     private String telescopeLocation;
     private String status;
     private Boolean validated;
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.REFRESH)
     ObservingProgram observingProgram;
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.REFRESH)
     dataProc dataProcRequirements;
     @Id
     private int planNo;

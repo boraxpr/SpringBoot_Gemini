@@ -3,6 +3,7 @@ package com.gemini.web;
 import com.gemini.model.*;
 import com.gemini.ocs.model.DataProcRequirement;
 import com.gemini.repository.EmployeeRepository;
+import com.gemini.repository.ObservableSciplanRepository;
 import com.gemini.repository.SciplanRepository;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jparsec.ephem.Target;
@@ -25,6 +26,8 @@ public class HomeController {
     private EmployeeRepository employeeRepository;
     @Autowired
     private SciplanRepository sciplanRepository;
+    @Autowired
+    private ObservableSciplanRepository observableSciplanRepository;
 
     @GetMapping("/")
     public @ResponseBody String root() {
@@ -184,9 +187,18 @@ public class HomeController {
     }
 
     @DeleteMapping("/api/delete")
-    public ResponseEntity<String> removeSciPlanById(@RequestBody int planNo) {
-        // delete a specific hero
-        sciplanRepository.deleteById(planNo);
+    public ResponseEntity<String> removeSciPlanById(@RequestBody PlanNo planNo) {
+        SciencePlan sciplan = sciplanRepository.findByPlanNo(planNo.getPlanNo());
+        sciplanRepository.delete(sciplan);
         return new ResponseEntity<>("Sciplan: "+planNo+"is deleted",HttpStatus.OK);
+    }
+
+    @PostMapping("/api/submit")
+    public ResponseEntity<String> submitSciplan(@RequestBody PlanNo planNo){
+        int planno = planNo.getPlanNo();
+        SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
+        observableSciplanRepository.save(sciplan);
+        sciplanRepository.delete(sciplan);
+        return new ResponseEntity<>("Sciplan: "+planno+"is submitted",HttpStatus.OK);
     }
 }
