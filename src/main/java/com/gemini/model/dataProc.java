@@ -7,7 +7,6 @@ import com.gemini.ocs.model.DataProcRequirement;
 import javax.persistence.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @Entity
 public class dataProc {
     private static AtomicInteger count = new AtomicInteger(0);
