@@ -12,6 +12,7 @@ import jparsec.observer.LocationElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import io.jsonwebtoken.Jwts;
 import org.json.*;
@@ -253,7 +254,7 @@ public class HomeController {
             return new ResponseEntity<>("Bad token", HttpStatus.BAD_REQUEST);
         }
 
-        try {
+//        try {
                     int planno = planNo.getPlanNo();
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
 //        get dataProcessing from db
@@ -262,7 +263,7 @@ public class HomeController {
         ObservingProgram observ = sciplan.getObservingProgram();
 //        Forming official DataProcRequirement OCS
         DataProcRequirement dataprT = new DataProcRequirement(
-                DataProcRequirement.TYPE.valueOf(datapr.getFileType())
+                DataProcRequirement.TYPE.valueOf(datapr.getFileType().toUpperCase())
                 , datapr.getFileQuality()
                 , DataProcRequirement.COLOR_TYPE.valueOf(datapr.getCOLOR_TYPE())
                 , datapr.getContrast()
@@ -327,25 +328,35 @@ public class HomeController {
         );
         VirtualTelescope vt1 = VirtualTelescopeHandler.getVirtualTelescope(VirtualTelescope.NORTH);
         VirtualTelescope vt2 = VirtualTelescopeHandler.getVirtualTelescope(VirtualTelescope.SOUTH);
+        String starsysPatched = sciplan.getStarSystem()
+                .replaceAll("-"," ")
+                .replaceAll("_"," ");
+        String[] sys = starsysPatched.split(" ");
+        ArrayList<String> starsysReady = new ArrayList<>();
+        for (String s:sys) {
+            String x=s.substring(0,1).toUpperCase();
+            String total = x+s.substring(1);
+            starsysReady.add(total);
+        }
+        String starsysTest = String.join("_",starsysReady);
+//        System.out.println(starsysReady);
         BaseSciencePlan baseSci = new BaseSciencePlan(
                 sciplan.getCreator()
                 , "Tester"
                 , sciplan.getFundingInUSD()
                 , sciplan.getObjectives()
-                , Target.TARGET.valueOf(sciplan.getStarSystem())
+                , Target.TARGET.valueOf(starsysTest)
                 , sciplan.getStartDate()
                 , sciplan.getEndDate()
-                , BaseSciencePlan.TELESCOPELOC.valueOf(sciplan.getTelescopeLocation())
+                , BaseSciencePlan.TELESCOPELOC.valueOf(sciplan.getTelescopeLocation().toUpperCase())
                 , dataprTest
         );
         baseSci.setStatus(BaseSciencePlan.STATUS.RUNNING);
         vt1.setSciencePlan(baseSci);
         vt2.setSciencePlan(baseSci);
-        vt1.executeSciencePlan();
-        vt2.executeSciencePlan();
-        }catch (Exception e){
-            return new ResponseEntity<>("testFail", HttpStatus.OK);
-        }
+//        }catch (Exception e){
+//            return new ResponseEntity<>("testFail", HttpStatus.BAD_REQUEST);
+//        }
 
         return new ResponseEntity<>("test success", HttpStatus.OK);
     }
