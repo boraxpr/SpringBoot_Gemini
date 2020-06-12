@@ -15,10 +15,6 @@ import java.util.List;
 @Entity
 public class ObservingProgram {
     private boolean isLightDetectorOn;
-    @ElementCollection
-    @CollectionTable
-    @JsonProperty("specialEquipment")
-    private List<String> specialEquipments;
     @OneToMany(cascade = CascadeType.ALL)
     @JsonProperty("filter")
     private List<filter> filters;
@@ -35,18 +31,22 @@ public class ObservingProgram {
     @JsonProperty("locationElement")
     private locationElement loc;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonProperty("specialEquipment")
+    private List<specialEquipment> specialEquipments;
+
     @Id
     private int id;
 
     public ObservingProgram(){}
 
     public ObservingProgram(locationElement locationElement
-            , ArrayList<String> specialEquipments
+            , ArrayList<specialEquipment> specialEquipments
             , ArrayList<filter> filter
             , ArrayList<Double> exposures
             , lens lens, boolean isLightDetectorOn
     ){
-        this.loc = loc;
+        this.loc = locationElement;
         this.filters = filter;
         this.exposures = exposures;
         this.lens = lens;
@@ -74,7 +74,7 @@ public class ObservingProgram {
         return isLightDetectorOn;
     }
 
-    public ArrayList<String> getSpecialEquipments() {
+    public ArrayList<specialEquipment> getSpecialEquipments() {
         return new ArrayList<>(specialEquipments);
     }
 }
