@@ -1,13 +1,7 @@
 package com.gemini.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gemini.ocs.model.BaseObservingProgram;
-import com.gemini.ocs.model.DataProcRequirement;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.Date;
+
 @XmlRootElement
 public class AddSciplanForm {
 
@@ -18,10 +12,9 @@ public class AddSciplanForm {
     String starSystem;
     String startDate;
     String endDate;
-    String TELESCOPELOC;
-    dataProc dataProcRequirement;
+    String telescopeLoc;
+    DataProc dataProc;
     ObservingProgram observingProgram;
-    String status;
 
     public void setValidated(Boolean validated) {
         this.validated = validated;
@@ -51,20 +44,16 @@ public class AddSciplanForm {
         this.endDate = endDate;
     }
 
-    public void setTELESCOPELOC(String TELESCOPELOC) {
-        this.TELESCOPELOC = TELESCOPELOC;
+    public void setTelescopeLoc(String telescopeLoc) {
+        this.telescopeLoc = telescopeLoc;
     }
 
-    public void setDataProcRequirements(dataProc dataProcRequirement) {
-        this.dataProcRequirement = dataProcRequirement;
+    public void setDataProcRequirements(DataProc dataProc) {
+        this.dataProc = dataProc;
     }
 
     public void setObservingProgram(ObservingProgram observingProgram) {
         this.observingProgram = observingProgram;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public double getFundingInUSD() {
@@ -87,19 +76,15 @@ public class AddSciplanForm {
         return endDate;
     }
 
-    public String getTELESCOPELOC() {
-        return TELESCOPELOC;
+    public String getTelescopeLoc() {
+        return telescopeLoc;
     }
 
-    public dataProc getDataProcRequirements() {
-        return dataProcRequirement;
+    public DataProc getDataProcRequirements() {
+        return dataProc;
     }
 
     public ObservingProgram getObservingProgram() {
         return observingProgram;
-    }
-
-    public String getStatus() {
-        return status;
     }
 }

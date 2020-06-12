@@ -6,13 +6,18 @@ import com.gemini.ocs.model.Filter;
 import com.gemini.ocs.model.Lens;
 import com.gemini.ocs.model.SpecialEquipment;
 import jparsec.observer.LocationElement;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@DynamicUpdate
 public class ObservingProgram {
+    @JsonProperty("lightDetectorOn")
     private boolean isLightDetectorOn;
     @OneToMany(cascade = CascadeType.ALL)
     @JsonProperty("filter")
@@ -21,15 +26,15 @@ public class ObservingProgram {
     @CollectionTable
     @JsonProperty("exposures")
     private List<Double> exposures;
-
+    @NotFound(action = NotFoundAction.IGNORE)
     @OneToOne(cascade = CascadeType.ALL)
     @JsonProperty("lens")
     private lens lens;
-
+    @NotFound(action = NotFoundAction.IGNORE)
     @OneToOne(cascade = CascadeType.ALL)
     @JsonProperty("locationElement")
     private locationElement loc;
-
+    @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(cascade = CascadeType.ALL)
     @JsonProperty("specialEquipment")
     private List<specialEquipment> specialEquipments;

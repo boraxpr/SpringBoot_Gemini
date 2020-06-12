@@ -1,15 +1,9 @@
 package com.gemini.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.gemini.ocs.model.BaseObservingProgram;
-import com.gemini.ocs.model.BaseSciencePlan;
-import com.gemini.ocs.model.DataProcRequirement;
-import jparsec.ephem.Target;
 import org.hibernate.annotations.DynamicUpdate;
 
 
@@ -26,10 +20,12 @@ public class SciencePlan {
     private String telescopeLocation;
     private String status;
     private Boolean validated;
-    @OneToOne(cascade=CascadeType.REFRESH)
+
+    @OneToOne(cascade=CascadeType.ALL)
     ObservingProgram observingProgram;
-    @OneToOne(cascade=CascadeType.REFRESH)
-    dataProc dataProcRequirements;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    DataProc dataProcRequirements;
     @Id
     private int planNo;
 
@@ -37,7 +33,7 @@ public class SciencePlan {
             , double fundingInUSD
             , String objectives, String starSystem
             , Date startDate, Date endDate
-            , String telescopeLocation, dataProc dataProcRequirements
+            , String telescopeLocation, DataProc dataProcRequirements
             , ObservingProgram observingProgram, String status){
         this.creator = creator;
         this.fundingInUSD = fundingInUSD;
@@ -101,7 +97,7 @@ public class SciencePlan {
         return observingProgram;
     }
 
-    public dataProc getDataProcRequirements() {
+    public DataProc getDataProcRequirements() {
         return dataProcRequirements;
     }
 
