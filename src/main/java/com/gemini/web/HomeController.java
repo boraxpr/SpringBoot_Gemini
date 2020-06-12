@@ -78,6 +78,7 @@ public class HomeController {
         String starSystem = addSciplanForm.getStarSystem();
         String TELESCOPELOC = addSciplanForm.getTelescopeLoc();
         DataProc dataProcRequirements = addSciplanForm.getDataProcRequirements();
+        System.out.println(dataProcRequirements);
         ObservingProgram observingProgram = addSciplanForm.getObservingProgram();
         String status = "RUNNING";
                 //        Token checking
@@ -98,7 +99,7 @@ public class HomeController {
                 ,StartDate
                 ,EndDate
                 ,TELESCOPELOC
-                , dataProcRequirements
+                ,dataProcRequirements
                 ,observingProgram
                 ,status);
         sciplanRepository.save(sciplan);

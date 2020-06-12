@@ -1,5 +1,7 @@
 package com.gemini.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -13,7 +15,9 @@ public class AddSciplanForm {
     String startDate;
     String endDate;
     String telescopeLoc;
-    DataProc dataProc;
+    @JsonProperty("dataProcRequirement")
+    DataProc dataProcRequirement;
+    @JsonProperty("observingProgram")
     ObservingProgram observingProgram;
 
     public void setValidated(Boolean validated) {
@@ -49,7 +53,7 @@ public class AddSciplanForm {
     }
 
     public void setDataProcRequirements(DataProc dataProc) {
-        this.dataProc = dataProc;
+        this.dataProcRequirement = dataProc;
     }
 
     public void setObservingProgram(ObservingProgram observingProgram) {
@@ -81,7 +85,7 @@ public class AddSciplanForm {
     }
 
     public DataProc getDataProcRequirements() {
-        return dataProc;
+        return dataProcRequirement;
     }
 
     public ObservingProgram getObservingProgram() {
