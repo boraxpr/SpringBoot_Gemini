@@ -52,7 +52,7 @@ public class HomeController {
                     return new ResponseEntity<>(jsonString.toString(),HttpStatus.OK);
                 }
         }
-        return new ResponseEntity<>("User not found",HttpStatus.OK);
+        return new ResponseEntity<>("User not found",HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(path="/api/testtoken",consumes = "application/json", produces = "application/json")
@@ -143,7 +143,7 @@ public class HomeController {
                 .getBody()
                 .getSubject();
         }catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
 
         return sciplanRepository.findByValidated(true);
@@ -159,21 +159,21 @@ public class HomeController {
                 .getBody()
                 .getSubject();
         }catch (Exception e){
-            return null;
+            return new ArrayList<>();
         }
         return sciplanRepository.findByValidated(false);
     }
 
     @PostMapping("/api/validate")
     public ResponseEntity<String> validateSciplan(@RequestBody PlanNo planNo,@RequestHeader(name = "token") String headerPersist) throws ParseException {
-                try{
+        try{
             String username = Jwts.parser()
                 .setSigningKey("secretkey")
                 .parseClaimsJws(headerPersist.replace("Bearer",""))
                 .getBody()
                 .getSubject();
         }catch (Exception e){
-            return null;
+            return new ResponseEntity<>("Bad token", HttpStatus.BAD_REQUEST);
         }
         SciencePlan sciencePlan = sciplanRepository.findByPlanNo(planNo.getPlanNo());
 //        Check starSystem Enum from Target jparsec.ephem
@@ -201,7 +201,7 @@ public class HomeController {
                 .getBody()
                 .getSubject();
         }catch (Exception e){
-            return null;
+            return new ResponseEntity<>("Bad token", HttpStatus.BAD_REQUEST);
         }
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planNo.getPlanNo());
         sciplanRepository.delete(sciplan);
@@ -217,7 +217,7 @@ public class HomeController {
                 .getBody()
                 .getSubject();
         }catch (Exception e){
-            return null;
+            return new ResponseEntity<>("Bad token", HttpStatus.BAD_REQUEST);
         }
         int planno = planNo.getPlanNo();
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
