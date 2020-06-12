@@ -107,7 +107,7 @@ public class HomeController {
 //            , ArrayList<String> observingProgram, String status)
     @GetMapping("/api/getsciplan")
     public @ResponseBody
-    ArrayList<SciencePlan> getSciplan() throws ParseException {
+    ArrayList<SciencePlan> getSciplan(@RequestHeader(name = "token") String headerPersist) throws ParseException {
 //        filter filter = new filter("testsetse","mamamama","222A",2000,200,200);
 //        ArrayList<filter> filters = new ArrayList<>();
 //        filters.add(filter);
@@ -136,40 +136,46 @@ public class HomeController {
 //                ,"COMPLETE");
 //
 //        sciplanRepository.save(SciplanValidated);
-//        System.out.println(
-//                SciplanValidated.getObservingProgram());
+        try{
+            String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace("Bearer",""))
+                .getBody()
+                .getSubject();
+        }catch (Exception e){
+            return null;
+        }
 
         return sciplanRepository.findByValidated(true);
     }
 
     @GetMapping("/api/getnonvalidatedsciplan")
     public @ResponseBody
-    ArrayList<SciencePlan> getNonValidatedSciplan() throws ParseException {
-//        SciencePlan SciplanNoValidated = new SciencePlan("naipawat"
-//        ,new Double(99999999),"WRONGOBJECTIVE"
-//        ,"SUN",new SimpleDateFormat("dd/MM/yyyy").parse("20/10/2020")
-//        ,new SimpleDateFormat("dd/MM/yyyy").parse("30/10/2020"),"HAWAII"
-//        ,new ArrayList<>(Arrays.asList("","",""))
-//        ,new ArrayList<>(Arrays.asList("","","")),"RUNNING");
-//        filter filter = new filter("","","",2000,200,200);
-//        ArrayList<filter> filters = new ArrayList<>();
-//        filters.add(filter);
-//                SciencePlan SciplanValidated = new SciencePlan("naipawat"
-//                ,new Double(200),"objectives101"
-//                ,"SUN",new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10")
-//                , new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20")
-//                ,"HAWAII",new dataProc("PNG",100,"COLOR",0,0,0)
-//                ,new ObservingProgram(new locationElement((double)133,(double)155,(double)177)
-//                        , new ArrayList<String>(Arrays.asList("","",""))
-//                        , filters, new ArrayList<Double>(0)
-//                        , new lens(),true),"COMPLETE");
-//                sciplanRepository.save(SciplanValidated);
+    ArrayList<SciencePlan> getNonValidatedSciplan(@RequestHeader(name = "token") String headerPersist) throws ParseException {
+        try{
+            String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace("Bearer",""))
+                .getBody()
+                .getSubject();
+        }catch (Exception e){
+            return null;
+        }
         return sciplanRepository.findByValidated(false);
     }
 
     @PostMapping("/api/validate")
-    public ResponseEntity<String> validateSciplan(@RequestBody int planNo){
-        SciencePlan sciencePlan = sciplanRepository.findByPlanNo(planNo);
+    public ResponseEntity<String> validateSciplan(@RequestBody PlanNo planNo,@RequestHeader(name = "token") String headerPersist) throws ParseException {
+                try{
+            String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace("Bearer",""))
+                .getBody()
+                .getSubject();
+        }catch (Exception e){
+            return null;
+        }
+        SciencePlan sciencePlan = sciplanRepository.findByPlanNo(planNo.getPlanNo());
 //        Check starSystem Enum from Target jparsec.ephem
         String[] AvailableNames = Target.getNames();
         List<String> availableNames = Arrays.asList(AvailableNames);
@@ -187,14 +193,32 @@ public class HomeController {
     }
 
     @DeleteMapping("/api/delete")
-    public ResponseEntity<String> removeSciPlanById(@RequestBody PlanNo planNo) {
+    public ResponseEntity<String> removeSciPlanById(@RequestBody PlanNo planNo,@RequestHeader(name = "token") String headerPersist) {
+        try{
+            String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace("Bearer",""))
+                .getBody()
+                .getSubject();
+        }catch (Exception e){
+            return null;
+        }
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planNo.getPlanNo());
         sciplanRepository.delete(sciplan);
         return new ResponseEntity<>("Sciplan: "+planNo+"is deleted",HttpStatus.OK);
     }
 
     @PostMapping("/api/submit")
-    public ResponseEntity<String> submitSciplan(@RequestBody PlanNo planNo){
+    public ResponseEntity<String> submitSciplan(@RequestBody PlanNo planNo,@RequestHeader(name = "token") String headerPersist){
+        try{
+            String username = Jwts.parser()
+                .setSigningKey("secretkey")
+                .parseClaimsJws(headerPersist.replace("Bearer",""))
+                .getBody()
+                .getSubject();
+        }catch (Exception e){
+            return null;
+        }
         int planno = planNo.getPlanNo();
         SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
         observableSciplanRepository.save(sciplan);
