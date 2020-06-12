@@ -27,4 +27,27 @@ public class specialEquipment {
         this.id=count.incrementAndGet();
     }
 
+    public String getEquipmentName() {
+        return equipmentName;
+    }
+
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getInstalledDate() {
+        return installedDate;
+    }
+
+    public void setInstalledDate(String installedDate) {
+        this.installedDate = installedDate;
+    }
 }

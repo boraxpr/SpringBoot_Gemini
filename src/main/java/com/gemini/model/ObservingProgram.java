@@ -58,6 +58,10 @@ public class ObservingProgram {
         this.specialEquipments = specialEquipments;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public locationElement getLoc() {
         return loc;
     }

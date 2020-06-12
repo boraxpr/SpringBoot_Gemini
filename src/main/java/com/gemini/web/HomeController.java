@@ -1,11 +1,14 @@
 package com.gemini.web;
 
 import com.gemini.model.*;
+import com.gemini.ocs.controller.VirtualTelescopeHandler;
+import com.gemini.ocs.model.*;
 import com.gemini.repository.EmployeeRepository;
 import com.gemini.repository.ObservableSciplanRepository;
 import com.gemini.repository.SciplanRepository;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jparsec.ephem.Target;
+import jparsec.observer.LocationElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -238,6 +241,114 @@ public class HomeController {
         return new ResponseEntity<>("Sciplan: "+planno+"is submitted",HttpStatus.OK);
     }
 
+    @PostMapping("/api/test")
+    public ResponseEntity<String> testSciplan(@RequestBody PlanNo planNo,@RequestHeader(name = "token") String headerPersist) throws ParseException {
+        try {
+            String username = Jwts.parser()
+                    .setSigningKey("secretkey")
+                    .parseClaimsJws(headerPersist.replace("Bearer", ""))
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
+            return new ResponseEntity<>("Bad token", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+                    int planno = planNo.getPlanNo();
+        SciencePlan sciplan = sciplanRepository.findByPlanNo(planno);
+//        get dataProcessing from db
+        DataProc datapr = sciplan.getDataProcRequirements();
+//        get observingProgram from db
+        ObservingProgram observ = sciplan.getObservingProgram();
+//        Forming official DataProcRequirement OCS
+        DataProcRequirement dataprT = new DataProcRequirement(
+                DataProcRequirement.TYPE.valueOf(datapr.getFileType())
+                , datapr.getFileQuality()
+                , DataProcRequirement.COLOR_TYPE.valueOf(datapr.getCOLOR_TYPE())
+                , datapr.getContrast()
+                , datapr.getBrightness()
+                , datapr.getSaturation()
+        );
+        ArrayList<DataProcRequirement> dataprTest = new ArrayList<>();
+        dataprTest.add(dataprT);
+
+//        Forming official ObservingProgram OCS
+        locationElement loc = observ.getLoc();
+        lens len = observ.getLens();
+//        Forming official Filter OCS
+        ArrayList<filter> fi = observ.getFilters();
+        ArrayList<Filter> fiTest = new ArrayList<>();
+        for (filter f:fi) {
+            String make = f.getMake();
+            String manufacturer = f.getManufacturer();
+            String model = f.getModel();
+            int year = f.getYear();
+            double size = f.getSize();
+            double weight = f.getWeight();
+            fiTest.add(new Filter(
+                    make
+                    ,manufacturer
+                    ,model
+                    ,year
+                    ,size
+                    ,weight)
+                    );
+        }
+//    Forming official SpecialEquipment OCS
+        ArrayList<specialEquipment> sp = observ.getSpecialEquipments();
+        ArrayList<SpecialEquipment> spTest = new ArrayList<>();
+        for (specialEquipment s:sp) {
+            String eName = s.getEquipmentName();
+            String oName = s.getOwnerName();
+            Date installedDate = new SimpleDateFormat("yyyy-MM-dd").parse(s.getInstalledDate());
+            spTest.add(new SpecialEquipment(eName,oName,installedDate));
+        }
+
+        BaseObservingProgram observTest = new BaseObservingProgram(
+               observ.getId()
+                , new LocationElement
+                    (
+                        loc.getLongitude()
+                        ,loc.getLatitude()
+                        ,loc.getRadius()
+                    )
+                , new Lens
+                    (
+                        len.getMake()
+                        ,len.getModel()
+                        ,len.getManufacturer()
+                        ,len.getYear()
+                    )
+                , fiTest
+                , observ.getExposures()
+                , observ.isLightDetectorOn()
+                , spTest
+                , null
+        );
+        VirtualTelescope vt1 = VirtualTelescopeHandler.getVirtualTelescope(VirtualTelescope.NORTH);
+        VirtualTelescope vt2 = VirtualTelescopeHandler.getVirtualTelescope(VirtualTelescope.SOUTH);
+        BaseSciencePlan baseSci = new BaseSciencePlan(
+                sciplan.getCreator()
+                , "Tester"
+                , sciplan.getFundingInUSD()
+                , sciplan.getObjectives()
+                , Target.TARGET.valueOf(sciplan.getStarSystem())
+                , sciplan.getStartDate()
+                , sciplan.getEndDate()
+                , BaseSciencePlan.TELESCOPELOC.valueOf(sciplan.getTelescopeLocation())
+                , dataprTest
+        );
+        baseSci.setStatus(BaseSciencePlan.STATUS.RUNNING);
+        vt1.setSciencePlan(baseSci);
+        vt2.setSciencePlan(baseSci);
+        vt1.executeSciencePlan();
+        vt2.executeSciencePlan();
+        }catch (Exception e){
+            return new ResponseEntity<>("testFail", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("test success", HttpStatus.OK);
+    }
 
 
 }
