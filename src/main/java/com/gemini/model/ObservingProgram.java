@@ -14,8 +14,6 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @Entity
 public class ObservingProgram {
-    @JsonProperty("locationElement")
-    private LocationElement loc;
     private boolean isLightDetectorOn;
     @ElementCollection
     @CollectionTable
@@ -28,22 +26,27 @@ public class ObservingProgram {
     @CollectionTable
     @JsonProperty("exposures")
     private List<Double> exposures;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JsonProperty("lens")
     private lens lens;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonProperty("locationElement")
+    private locationElement loc;
 
     @Id
     private int id;
 
     public ObservingProgram(){}
 
-    public ObservingProgram(LocationElement locationElement
+    public ObservingProgram(locationElement locationElement
             , ArrayList<String> specialEquipments
             , ArrayList<filter> filter
             , ArrayList<Double> exposures
             , lens lens, boolean isLightDetectorOn
     ){
-        this.loc = new LocationElement();
+        this.loc = loc;
         this.filters = filter;
         this.exposures = exposures;
         this.lens = lens;
@@ -51,7 +54,7 @@ public class ObservingProgram {
         this.specialEquipments = specialEquipments;
     }
 
-    public LocationElement getLoc() {
+    public locationElement getLoc() {
         return loc;
     }
 
