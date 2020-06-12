@@ -6,6 +6,7 @@ import com.gemini.repository.EmployeeRepository;
 import com.gemini.repository.SciplanRepository;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jparsec.ephem.Target;
+import jparsec.observer.LocationElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +141,19 @@ public class HomeController {
 //        ,new SimpleDateFormat("dd/MM/yyyy").parse("30/10/2020"),"HAWAII"
 //        ,new ArrayList<>(Arrays.asList("","",""))
 //        ,new ArrayList<>(Arrays.asList("","","")),"RUNNING");
+        filter filter = new filter("","","",2000,200,200);
+        ArrayList<filter> filters = new ArrayList<>();
+        filters.add(filter);
+                SciencePlan SciplanValidated = new SciencePlan("naipawat"
+                ,new Double(200),"objectives101"
+                ,"SUN",new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10")
+                , new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20")
+                ,"HAWAII",new dataProc("PNG",100,"COLOR",0,0,0)
+                ,new ObservingProgram(new LocationElement(1,1,1)
+                        , new ArrayList<String>(Arrays.asList("","",""))
+                        , filters, new ArrayList<Double>(0)
+                        , new lens(),true),"COMPLETE");
+                sciplanRepository.save(SciplanValidated);
         return sciplanRepository.findByValidated(false);
     }
 

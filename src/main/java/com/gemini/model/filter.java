@@ -18,7 +18,8 @@ public class filter extends Filter {
         super("","","",9999,0,0);
     }
 
-    public filter(String make, String manufacturer, String model, int year, double size, double weight) {
+    public filter(String make, String manufacturer, String model
+            , int year, double size, double weight) {
         super(make, manufacturer, model, year, size, weight);
         this.id = count.incrementAndGet();
     }

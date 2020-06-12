@@ -1,5 +1,7 @@
 package com.gemini.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.gemini.ocs.model.Filter;
 import com.gemini.ocs.model.Lens;
 import com.gemini.ocs.model.SpecialEquipment;
@@ -9,19 +11,25 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @Entity
 public class ObservingProgram {
+    @JsonProperty("locationElement")
     private LocationElement loc;
     private boolean isLightDetectorOn;
     @ElementCollection
     @CollectionTable
+    @JsonProperty("specialEquipment")
     private List<String> specialEquipments;
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonProperty("filter")
     private List<filter> filters;
     @ElementCollection
     @CollectionTable
+    @JsonProperty("exposures")
     private List<Double> exposures;
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonProperty("lens")
     private lens lens;
 
     @Id
